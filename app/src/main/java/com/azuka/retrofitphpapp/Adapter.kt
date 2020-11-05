@@ -34,4 +34,8 @@ class Adapter : RecyclerView.Adapter<Adapter.MyViewHolder>() {
         var txtAddress: TextView = itemView.findViewById(R.id.txt_address)
         var txtContact: TextView = itemView.findViewById(R.id.txt_contact)
     }
+    fun setData(user: List<Data>){
+        this.dataList = user
+        notifyDataSetChanged()
+    }
 }

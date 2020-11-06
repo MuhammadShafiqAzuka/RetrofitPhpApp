@@ -1,5 +1,6 @@
 package com.azuka.retrofitphpapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,9 +25,30 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //binding adapter
         binding.rvDatalist.layoutManager = LinearLayoutManager(this)
         binding.rvDatalist.adapter = myAdapter
 
+        //binding buttons
+        binding.fab.setOnClickListener {
+            val intent = Intent(this, AddActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.swipeLayout.setOnRefreshListener {
+            binding.swipeLayout.isRefreshing = true
+            postData()
+            binding.swipeLayout.isRefreshing = false
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //Retrieve Data From MyPhpAdmin
+        postData()
+    }
+
+    private fun postData() {
         val request = RetrofitInstance.buildService(GetDataServices::class.java)
         val call = request.getListData()
 
@@ -40,7 +62,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, "${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
-
     }
 
     private fun generateNoticeList(data: List<Data>) {
